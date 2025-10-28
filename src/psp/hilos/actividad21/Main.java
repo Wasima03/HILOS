@@ -1,10 +1,11 @@
 package psp.hilos.actividad21;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public class main {
+public class Main {
     public static void main(String[] args) throws InterruptedException {
         List<Triangulo> hilos=new ArrayList<>();
         Scanner sc = new Scanner(System.in);
@@ -26,9 +27,12 @@ public class main {
                 System.out.print("Introduce la prioridad del 1 al 10: ");
                 try{
                     prioridad=sc.nextInt();
-                    hilos.add(new Triangulo(altura,base));
+                    Triangulo t =new Triangulo(altura,base);
+                    t.setPriority(prioridad);
+                    hilos.add(t);
 
-                }catch (NumberFormatException e){
+
+                }catch (InputMismatchException e){
                     e.printStackTrace();
                 }
             }else{
@@ -37,18 +41,16 @@ public class main {
             contador+=1;
 
         }
+        sc.close();
         int n=1;
         for(Triangulo t : hilos){
             t.setName("Triángulo "+n);
-            if (opc.equalsIgnoreCase("s")){
-                t.setPriority(prioridad);
-            }
             t.start();
             n+=1;
         }
         for(Triangulo t : hilos){
             t.join();
         }
-        System.out.println("Fin del programa...");
+        System.out.println("Fin del programa.");
     }
 }

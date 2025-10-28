@@ -10,28 +10,41 @@ public class ClienteBanco extends Thread{
     private int cantidad;
     private int tiempo;
     private int transacciones;
+    private int tipo;
+    private CuentaBancaria cuenta;
 
-    public ClienteBanco(int maxOperaciones,int maxCantidad,int maxTiempo){
+    public ClienteBanco(CuentaBancaria cuenta,int maxOperaciones,int maxCantidad,int maxTiempo){
         this.maxOperaciones=maxOperaciones;
         this.maxCantidad=maxCantidad;
         this.maxTiempo=maxTiempo;
+        this.cuenta=cuenta;
     }
     public int getTransacciones(){
         return transacciones;
     }
 
-   synchronized public void run() {
-        CuentaBancaria cb = new CuentaBancaria();
-        operaciones=(int) random();
+    public void run() {
+        operaciones=(int) (random()* maxOperaciones)+1;
         transacciones=0;
         for (int i = 0; i<operaciones;i++){
-            cantidad=(int) random()*maxCantidad;
-            tiempo=(int)random()*maxTiempo;
+            cantidad=(int) (random()*maxCantidad)+1;
+            tiempo=(int)(random()*maxTiempo)+1000;
+            tipo=(int)(Math.random()*2);
 
-            cb.depositarDinero(cantidad);
-
-            System.out.println(this.getName()+"ha depositado"+cantidad);
-            transacciones+=cantidad;
+            if(tipo==0){
+                cuenta.depositarDinero(cantidad);
+                System.out.println(this.getName()+" ha depositado "+cantidad+"€");
+                transacciones+=cantidad;
+            }
+            else{
+                cuenta.retirarDinero(cantidad);
+                System.out.println(this.getName()+" ha retirado "+cantidad+"€");
+            }
+            try{
+                Thread.sleep(tiempo);
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
 
         }
     }

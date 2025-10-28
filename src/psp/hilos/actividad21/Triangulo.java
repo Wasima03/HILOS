@@ -12,9 +12,14 @@ public class Triangulo extends  Thread{
     }
 
     public void run(){
-        for(int i=0;i<base;i++){
+
+        int baseEntera = (int) base;
+        float baseDecimal = base - baseEntera;
+
+        for(int i=0;i<baseEntera;i++){
             aux+=altura;
         }
+        aux+=baseDecimal*altura;
         System.out.println("Área del "+ this.getName()+ " con "+altura+" de altura y "+base+" de base : "+aux/2);
 
     }

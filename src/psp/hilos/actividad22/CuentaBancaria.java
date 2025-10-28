@@ -1,29 +1,39 @@
 package psp.hilos.actividad22;
 
 public class CuentaBancaria {
-    final int SALDO_INICIAL=1000;
+    public final int SALDO_INICIAL=1000;
     private int saldoActual;
+    public int transacciones;
 
-    public void CuentaBancaria(){
+    public  CuentaBancaria(){
+        this.saldoActual=SALDO_INICIAL;
 
     }
     public int getSaldoActual(){
-        return saldoActual;
+        return this.saldoActual;
     }
+
     public int getSaldoInicial(){
-        return saldoActual;
+        return this.SALDO_INICIAL;
     }
-    public void retirarDinero(int cantidad){
+
+    synchronized public void retirarDinero(int cantidad){
         if (cantidad>saldoActual){
-            System.out.println("Saldo insuficiente, sólo se pueden retirar"+saldoActual+"€ de"+cantidad+"€");
+            System.out.println("Saldo insuficiente, sólo se pueden retirar "+saldoActual+"€ de "+cantidad+"€");
             cantidad=saldoActual;
-            saldoActual= 0;
+            saldoActual-=cantidad;
         }
-        saldoActual-=cantidad;
+        else {
+            saldoActual -= cantidad;
+        }
     }
-    public void depositarDinero(int dinero){
-        saldoActual+=dinero;
+    synchronized public void depositarDinero(int dinero){
+
+        this.saldoActual+=dinero;
+        this.transacciones+=dinero;
     }
 
-
+    public int getTransacciones() {
+        return transacciones;
+    }
 }
