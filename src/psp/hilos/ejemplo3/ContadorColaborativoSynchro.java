@@ -1,10 +1,10 @@
 package psp.hilos.ejemplo3;
 
-public class ejemploContadorColaborativo {
+public class ContadorColaborativoSynchro {
 
     private static int valor=0;
-    private static final int THREADS=10;
-    private static final int INCREMENTS_PER_THREAD=100000;
+    static final int THREADS=10;
+    static final int INCREMENTS_PER_THREAD=100000;
 
     synchronized public void incrementa(){ //obliga a los hilos que no pasen or este codigo, mientras que ya hay uno dentro
         int valorPrevio=valor;
@@ -17,7 +17,7 @@ public class ejemploContadorColaborativo {
     }
     public static void main(String[] args) {
 
-        ejemploContadorColaborativo ecc = new ejemploContadorColaborativo();
+        ContadorColaborativoSynchro ecc = new ContadorColaborativoSynchro();
         Thread[] threads = new Thread[THREADS];
         for (int i=0;i<THREADS;i++){
             threads[i] =new Thread(() -> {
