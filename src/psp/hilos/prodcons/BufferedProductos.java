@@ -7,7 +7,7 @@ public class BufferedProductos {
     private int[] buffer;
     private int siguiente;
 
-    private boolean estaVacio;
+    boolean estaVacio;
     private boolean estaLleno;
 
     public BufferedProductos(int capacidad) {
@@ -21,8 +21,9 @@ public class BufferedProductos {
         this(DEFAULT_MAX_CAPACIDAD);
     }
 
-    public int consumir() throws InterruptedException {
+    public synchronized int consumir() throws InterruptedException { //parte de cinsumir, si el bufer esta vacio, no puede consumir, y espera
         while (estaVacio) {
+            System.out.println("Buffer vacio");
             wait();
         }
         siguiente--;
@@ -30,9 +31,28 @@ public class BufferedProductos {
             estaVacio=true;
         }
         estaLleno=false;
-        notifyAll();
+        notifyAll(); //avisamos que hay un hueco para que consuma
 
         return(buffer[siguiente]);
+    }
+
+    public synchronized void producir(int produccto) throws InterruptedException{
+        while(estaLleno){
+            wait();
+        }
+        buffer[siguiente]=produccto;
+        siguiente++;
+
+        if(siguiente==buffer.length){
+            estaLleno=true;
+        }
+        System.out.println("Se ha producido el producto"+produccto);
+        estaVacio=false;
+        notifyAll();
+
+    }
+    public boolean estaVacio(){
+        return estaVacio;
     }
 
 }
