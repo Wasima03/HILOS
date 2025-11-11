@@ -1,20 +1,18 @@
 package psp.hilos.actividad23;
 import java.util.concurrent.Semaphore;
 public class Empleado implements Runnable{
-    private final long TIEMPO_TRABAJO;
-    private long tiempo_descanso;
+    private final long MAX_TRABAJO=10;
+    private final long MAX_DESCANSO=10;
     private Semaphore puesto;
     private Semaphore ordenador;
 
     public Empleado(Semaphore puesto, Semaphore ordenador){
-        TIEMPO_TRABAJO = (long) (Math.random()*100);
         this.puesto=puesto;
         this.ordenador=ordenador;
     }
 
     @Override
     public void run() {
-        tiempo_descanso=(long)(Math.random()*10);
         int opc=(int)(Math.random()*2);
         if(opc==0){
             try {
@@ -25,7 +23,7 @@ public class Empleado implements Runnable{
             if(ordenador.tryAcquire()){
                 System.out.println(Thread.currentThread().getName()+" trabajando...");
                 try {
-                    Thread.sleep(TIEMPO_TRABAJO);
+                    Thread.sleep(MAX_TRABAJO);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -34,9 +32,9 @@ public class Empleado implements Runnable{
                 System.out.println(Thread.currentThread().getName()+" no ha podido coger un ordenador y se levanta de la mesa");
             }
             puesto.release();
-            System.out.println(Thread.currentThread().getName()+" esperando");
+            System.out.println(Thread.currentThread().getName()+" descansando");
             try {
-                Thread.sleep(tiempo_descanso);
+                Thread.sleep((long)(Math.random()*MAX_DESCANSO));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -50,7 +48,7 @@ public class Empleado implements Runnable{
             if(puesto.tryAcquire()){
                 System.out.println(Thread.currentThread().getName()+" trabajando...");
                 try {
-                    Thread.sleep(TIEMPO_TRABAJO);
+                    Thread.sleep(MAX_TRABAJO);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -61,7 +59,7 @@ public class Empleado implements Runnable{
             puesto.release();
             System.out.println(Thread.currentThread().getName()+" esperando");
             try {
-                Thread.sleep(tiempo_descanso);
+                Thread.sleep((long)(Math.random()*MAX_DESCANSO));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
